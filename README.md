@@ -30,7 +30,7 @@ A beautiful, AI-powered task management application built with React, TypeScript
 
 ### Installation
 
-1. **Install frontend dependencies**
+1. **Install all dependencies**
    ```bash
    npm install
    ```
@@ -75,14 +75,14 @@ A beautiful, AI-powered task management application built with React, TypeScript
    - Create a new API key
    - Add some credits to your account for API usage
 
-5. **Start both frontend and backend servers**
+5. **Start both servers**
    
-   Option 1 - Start both servers with one command:
+   Start both frontend and backend servers with one command:
    ```bash
    npm run dev:full
    ```
 
-   Option 2 - Start servers separately:
+   Or start servers separately:
    ```bash
    # Terminal 1 - Frontend
    npm run dev
