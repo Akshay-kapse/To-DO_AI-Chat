@@ -18,6 +18,8 @@ export const useChat = () => {
   const sendMessage = useCallback(async (content: string) => {
     if (!content.trim()) return;
 
+    console.log('💬 useChat: Sending message:', content);
+
     // Add user message
     const userMessage: ChatMessage = {
       id: crypto.randomUUID(),
@@ -33,7 +35,10 @@ export const useChat = () => {
     try {
       // Get tasks context for the AI
       const tasksSummary = taskService.getTasksSummary();
+      console.log('📋 Tasks summary for context:', tasksSummary);
+      
       const response = await openAIService.sendMessage(content, tasksSummary);
+      console.log('🤖 AI response received:', response);
 
       // Add assistant response
       const assistantMessage: ChatMessage = {
@@ -46,11 +51,12 @@ export const useChat = () => {
       setMessages(prev => [...prev, assistantMessage]);
 
       if (response.error) {
+        console.warn('⚠️ AI response contained error:', response.error);
         setError(response.error);
       }
     } catch (err) {
+      console.error('❌ useChat error:', err);
       setError('Failed to get AI response');
-      console.error('Chat error:', err);
     } finally {
       setLoading(false);
     }

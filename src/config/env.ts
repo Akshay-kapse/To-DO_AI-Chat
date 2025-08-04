@@ -8,10 +8,12 @@ export const loadConfig = (): AppConfig => {
     devMode: import.meta.env.VITE_DEV_MODE === 'true',
   };
 
-  // Validate required environment variables
-  if (!config.openaiApiKey && !config.devMode) {
-    console.warn('OpenAI API key is missing. AI features will be disabled.');
-  }
+  console.log('🔧 Frontend configuration loaded:', {
+    apiUrl: config.apiUrl,
+    appName: config.appName,
+    appVersion: config.appVersion,
+    devMode: config.devMode,
+  });
 
   return config;
 };

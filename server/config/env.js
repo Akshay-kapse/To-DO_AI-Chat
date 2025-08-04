@@ -47,7 +47,20 @@ export const config = {
 };
 
 // Log configuration (without sensitive data)
-console.log('🔧 Server configuration loaded:', {
+console.log('🔧 Server configuration loaded:');
+console.log('  Port:', config.server.port);
+console.log('  Environment:', config.server.nodeEnv);
+console.log('  Frontend URL:', config.cors.frontendUrl);
+console.log('  OpenAI API Key configured:', !!config.openai.apiKey);
+console.log('  OpenAI API Key length:', config.openai.apiKey ? config.openai.apiKey.length : 0);
+console.log('  OpenAI API Key starts with:', config.openai.apiKey ? config.openai.apiKey.substring(0, 7) + '...' : 'N/A');
+
+// Additional validation
+if (config.openai.apiKey && !config.openai.apiKey.startsWith('sk-')) {
+  console.warn('⚠️ OpenAI API key does not start with "sk-" - this might be invalid');
+}
+
+console.log('🔧 Configuration summary:', {
   port: config.server.port,
   nodeEnv: config.server.nodeEnv,
   frontendUrl: config.cors.frontendUrl,

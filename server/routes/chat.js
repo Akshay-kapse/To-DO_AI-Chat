@@ -5,10 +5,20 @@ const router = express.Router();
 
 // POST /api/chat - Send message to AI
 router.post('/', async (req, res, next) => {
+  console.log('📨 Chat endpoint hit:', {
+    method: req.method,
+    body: req.body,
+    headers: {
+      'content-type': req.headers['content-type'],
+      'origin': req.headers.origin
+    }
+  });
+  
   try {
     const { message, context } = req.body;
 
     if (!message || typeof message !== 'string' || message.trim().length === 0) {
+      console.warn('⚠️ Invalid message received:', { message, type: typeof message });
       return res.status(400).json({
         error: true,
         message: 'Message is required and must be a non-empty string',
@@ -16,13 +26,16 @@ router.post('/', async (req, res, next) => {
     }
 
     if (message.length > 1000) {
+      console.warn('⚠️ Message too long:', message.length);
       return res.status(400).json({
         error: true,
         message: 'Message is too long. Please keep it under 1000 characters.',
       });
     }
 
+    console.log('✅ Message validation passed, calling OpenAI service...');
     const response = await openaiService.sendMessage(message.trim(), context);
+    console.log('📤 Sending response to frontend:', response);
 
     res.json({
       success: true,
@@ -33,6 +46,7 @@ router.post('/', async (req, res, next) => {
       usage: response.usage,
     });
   } catch (error) {
+    console.error('❌ Chat route error:', error);
     next(error);
   }
 });

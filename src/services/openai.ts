@@ -7,9 +7,12 @@ export class OpenAIService {
 
   constructor() {
     this.apiUrl = `${config.apiUrl}/api/chat`;
+    console.log('🔧 OpenAI Service initialized with API URL:', this.apiUrl);
   }
 
   async sendMessage(message: string, context?: string): Promise<AIResponse> {
+    console.log('📤 Sending message to AI:', { message, context, apiUrl: this.apiUrl });
+    
     try {
       const response = await axios.post(
         this.apiUrl,
@@ -25,6 +28,8 @@ export class OpenAIService {
         }
       );
 
+      console.log('📥 AI Service Response:', response.data);
+
       if (response.data.success) {
         return {
           message: response.data.data.message,
@@ -33,7 +38,17 @@ export class OpenAIService {
         throw new Error(response.data.message || 'Failed to get AI response');
       }
     } catch (error) {
-      console.error('AI Service Error:', error);
+      console.error('❌ AI Service Error:', error);
+      
+      if (axios.isAxiosError(error)) {
+        console.error('📊 Error details:', {
+          status: error.response?.status,
+          statusText: error.response?.statusText,
+          data: error.response?.data,
+          code: error.code,
+          message: error.message
+        });
+      }
       
       if (axios.isAxiosError(error)) {
         if (error.code === 'ECONNREFUSED') {
@@ -76,6 +91,8 @@ export class OpenAIService {
       return [];
     }
 
+    console.log('📤 Getting task suggestions for:', tasks);
+
     try {
       const response = await axios.post(
         `${this.apiUrl}/suggestions`,
@@ -88,24 +105,30 @@ export class OpenAIService {
         }
       );
 
+      console.log('📥 Task suggestions response:', response.data);
+
       if (response.data.success) {
         return response.data.data.suggestions || [];
       }
       
       return [];
     } catch (error) {
-      console.error('Error getting task suggestions:', error);
+      console.error('❌ Error getting task suggestions:', error);
       return [];
     }
   }
 
   async checkHealth(): Promise<boolean> {
+    console.log('🏥 Checking backend health at:', `${config.apiUrl}/api/health`);
+    
     try {
       const response = await axios.get(`${config.apiUrl}/api/health`, {
         timeout: 5000,
       });
+      console.log('✅ Health check response:', response.data);
       return response.data.status === 'OK';
     } catch (error) {
+      console.error('❌ Health check failed:', error);
       return false;
     }
   }
