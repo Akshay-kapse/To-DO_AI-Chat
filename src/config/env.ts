@@ -1,9 +1,8 @@
 import { AppConfig } from '../types';
 
 export const loadConfig = (): AppConfig => {
-  // Detect if we're on HTTPS and adjust API URL accordingly
-  const isHttps = window.location.protocol === 'https:';
-  const defaultApiUrl = isHttps ? 'https://localhost:3001' : 'http://localhost:3001';
+  // Always use HTTP for API URL since backend runs on HTTP
+  const defaultApiUrl = 'http://localhost:3001';
   
   const config: AppConfig = {
     apiUrl: import.meta.env.VITE_API_URL || defaultApiUrl,
@@ -12,10 +11,12 @@ export const loadConfig = (): AppConfig => {
     devMode: import.meta.env.VITE_DEV_MODE === 'true',
   };
 
-  // Warn about protocol mismatch
+  // Warn about protocol mismatch and provide solution
+  const isHttps = window.location.protocol === 'https:';
   if (isHttps && config.apiUrl.startsWith('http://')) {
     console.warn('⚠️ Protocol mismatch detected: Frontend is HTTPS but API URL is HTTP');
-    console.warn('💡 Try accessing the app at http://localhost:5173 instead');
+    console.warn('💡 Solution: Access the app at http://localhost:5173 instead of https://localhost:5173');
+    console.warn('🚫 Browsers block HTTP requests from HTTPS pages (mixed content policy)');
   }
 
   console.log('🔧 Frontend configuration loaded:', {
