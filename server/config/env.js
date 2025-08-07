@@ -7,7 +7,7 @@ const __dirname = path.dirname(__filename);
 
 // Load environment variables using bolt.env best practices
 // Try .env.local first (for local development), then .env
-const envFiles = ['.env.local', '.env'];
+const envFiles = ['.env.example', '.env'];
 
 for (const envFile of envFiles) {
   const envPath = path.resolve(__dirname, '..', envFile);
@@ -25,7 +25,7 @@ const missingEnvVars = requiredEnvVars.filter(envVar => !process.env[envVar]);
 
 if (missingEnvVars.length > 0) {
   console.error('❌ Missing required environment variables:', missingEnvVars);
-  console.error('Please copy .env.example to .env.local and fill in the required values');
+  console.error('Please copy .env.example to .env.example and fill in the required values');
   console.error('⚠️ Server will continue but AI features will not work');
 }
 
@@ -67,7 +67,7 @@ if (config.openai.apiKey) {
   }
 } else {
   console.error('❌ No OpenAI API key found in environment variables');
-  console.error('📝 Please add OPENAI_API_KEY to server/.env.local file');
+  console.error('📝 Please add OPENAI_API_KEY to server/.env.example file');
 }
 
 console.log('\n🚀 Starting server with AI chat', config.openai.apiKey ? 'ENABLED' : 'DISABLED');
