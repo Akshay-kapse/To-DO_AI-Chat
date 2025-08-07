@@ -26,7 +26,7 @@ const missingEnvVars = requiredEnvVars.filter(envVar => !process.env[envVar]);
 if (missingEnvVars.length > 0) {
   console.error('❌ Missing required environment variables:', missingEnvVars);
   console.error('Please copy .env.example to .env.local and fill in the required values');
-  process.exit(1);
+  console.error('⚠️ Server will continue but AI features will not work');
 }
 
 export const config = {
@@ -52,17 +52,22 @@ console.log('  Port:', config.server.port);
 console.log('  Environment:', config.server.nodeEnv);
 console.log('  Frontend URL:', config.cors.frontendUrl);
 console.log('  OpenAI API Key configured:', !!config.openai.apiKey);
-console.log('  OpenAI API Key length:', config.openai.apiKey ? config.openai.apiKey.length : 0);
-console.log('  OpenAI API Key starts with:', config.openai.apiKey ? config.openai.apiKey.substring(0, 7) + '...' : 'N/A');
 
-// Additional validation
-if (config.openai.apiKey && !config.openai.apiKey.startsWith('sk-')) {
-  console.warn('⚠️ OpenAI API key does not start with "sk-" - this might be invalid');
+if (config.openai.apiKey) {
+  console.log('  OpenAI API Key length:', config.openai.apiKey.length);
+  console.log('  OpenAI API Key starts with:', config.openai.apiKey.substring(0, 7) + '...');
+  
+  // Validate API key format
+  if (!config.openai.apiKey.startsWith('sk-')) {
+    console.error('❌ Invalid OpenAI API key format! Key should start with "sk-"');
+  } else if (config.openai.apiKey.length < 40) {
+    console.error('❌ OpenAI API key appears too short! Expected length ~51 characters');
+  } else {
+    console.log('✅ OpenAI API key format looks valid');
+  }
+} else {
+  console.error('❌ No OpenAI API key found in environment variables');
+  console.error('📝 Please add OPENAI_API_KEY to server/.env.local file');
 }
 
-console.log('🔧 Configuration summary:', {
-  port: config.server.port,
-  nodeEnv: config.server.nodeEnv,
-  frontendUrl: config.cors.frontendUrl,
-  openaiConfigured: !!config.openai.apiKey,
-});
+console.log('\n🚀 Starting server with AI chat', config.openai.apiKey ? 'ENABLED' : 'DISABLED');

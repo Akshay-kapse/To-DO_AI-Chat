@@ -7,7 +7,8 @@ const router = express.Router();
 router.post('/', async (req, res, next) => {
   console.log('📨 Chat endpoint hit:', {
     method: req.method,
-    body: req.body,
+    messageLength: req.body?.message?.length || 0,
+    hasContext: !!req.body?.context,
     headers: {
       'content-type': req.headers['content-type'],
       'origin': req.headers.origin
