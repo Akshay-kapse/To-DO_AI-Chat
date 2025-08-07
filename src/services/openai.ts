@@ -121,6 +121,13 @@ export class OpenAIService {
   async checkHealth(): Promise<boolean> {
     console.log('🏥 Checking backend health at:', `${config.apiUrl}/api/health`);
     
+    // Check for mixed content issues before making request
+    if (window.location.protocol === 'https:' && this.apiUrl.startsWith('http://')) {
+      console.warn('🚫 Mixed Content Error: Cannot make HTTP requests from HTTPS page');
+      console.warn('💡 Solution: Access the app at http://localhost:5173 instead of https://localhost:5173');
+      return false;
+    }
+    
     try {
       const response = await axios.get(`${config.apiUrl}/api/health`, {
         timeout: 5000,
@@ -128,13 +135,7 @@ export class OpenAIService {
       console.log('✅ Health check response:', response.data);
       return response.data.status === 'OK';
     } catch (error) {
-      console.error('❌ Health check failed:', error);
-      
-      // Check for mixed content issues
-      if (window.location.protocol === 'https:' && this.apiUrl.startsWith('http://')) {
-        console.error('🚫 Mixed Content Error: Cannot make HTTP requests from HTTPS page');
-        console.error('💡 Solution: Access the app at http://localhost:5173 instead of https://localhost:5173');
-      }
+      console.error('❌ Health check failed:', error.message || error);
       
       return false;
     }
