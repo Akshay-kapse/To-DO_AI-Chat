@@ -20,7 +20,7 @@ for (const envFile of envFiles) {
 }
 
 // Validate required environment variables
-const requiredEnvVars = ['OPENAI_API_KEY'];
+const requiredEnvVars = ['OPENROUTER_API_KEY'];
 const missingEnvVars = requiredEnvVars.filter(envVar => !process.env[envVar]);
 
 if (missingEnvVars.length > 0) {
@@ -31,7 +31,7 @@ if (missingEnvVars.length > 0) {
 
 export const config = {
   openai: {
-    apiKey: process.env.OPENAI_API_KEY,
+    apiKey: process.env.OPENROUTER_API_KEY,
   },
   server: {
     port: process.env.PORT || 3001,
@@ -67,7 +67,7 @@ if (config.openai.apiKey) {
   }
 } else {
   console.error('❌ No OpenAI API key found in environment variables');
-  console.error('📝 Please add OPENAI_API_KEY to server/.env.example file');
+  console.error('📝 Please add OPENROUTER_API_KEY to server/.env.example file');
 }
 
 console.log('\n🚀 Starting server with AI chat', config.openai.apiKey ? 'ENABLED' : 'DISABLED');
