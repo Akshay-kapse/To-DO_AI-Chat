@@ -62,7 +62,7 @@ A beautiful, AI-powered task management application built with React, TypeScript
 
    Edit `server/.env.local` and add your OpenAI API key:
    ```env
-   OPENAI_API_KEY=your-openai-secret-key-here
+   OPENAI_API_KEY=******************
    PORT=3001
    NODE_ENV=development
    FRONTEND_URL=http://localhost:5173
